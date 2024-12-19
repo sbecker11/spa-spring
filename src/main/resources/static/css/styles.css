@@ -1,0 +1,96 @@
+/* styles.css */
+
+/* Custom color variables */
+:root {
+    --primary-color: #1b6ec2; /* Example custom primary color */
+    --secondary-color: #6c757d; /* Example custom secondary color */
+    --background-color: #f8f9fa; /* Light background */
+}
+
+/* Override Bootstrap's primary color */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: darken(var(--primary-color), 10%);
+    border-color: darken(var(--primary-color), 15%);
+}
+
+/* Custom typography */
+body {
+    font-family: 'Arial', sans-serif; /* Or any font you prefer */
+    background-color: var(--background-color);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700; /* Make headings bolder */
+}
+
+/* Custom navbar */
+.navbar {
+    background-color: var(--secondary-color);
+}
+
+.navbar-brand, .navbar-nav .nav-link {
+    color: white;
+}
+
+.navbar-nav .nav-link:hover {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+/* Custom card styles */
+.card {
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+    color: var(--primary-color);
+}
+
+/* Custom button styles */
+.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}
+
+/* Responsive utilities */
+@media (max-width: 767px) {
+    /* Styles for mobile devices */
+    .navbar-collapse {
+        background-color: var(--secondary-color);
+    }
+}
+
+/* Utility classes */
+.text-shadow {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.rounded-corners {
+    border-radius: 15px;
+}
+
+/* Custom footer */
+footer {
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 20px 0;
+    margin-top: auto;
+    text-align: center;
+}
+
+/* Ensure full height for body and html to push footer down */
+html, body {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}

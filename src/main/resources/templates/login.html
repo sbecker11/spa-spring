@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Profile</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}">
+</head>
+<body>
+    <div th:replace="navbar :: navbar"></div>
+    <h1>User Profile</h1>
+    <div th:if="${#authentication.name}" th:text="'Logged in as: ' + ${#authentication.name}"></div>
+    <div th:if="${#authentication.principal.attributes.email}" th:text="'Email: ' + ${#authentication.principal.attributes.email}"></div>
+</body>
+</html>

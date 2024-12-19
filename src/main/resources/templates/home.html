@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Home Page</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}">
+</head>
+<body>
+    <div th:replace="navbar :: navbar"></div>
+    <div class="container mt-4">
+        <h1>Welcome to the Home Page</h1>
+        <p>This is the main content area of your home page.</p>
+
+        <!-- Example of a Bootstrap card -->
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Featured</h5>
+                <p class="card-text">Here's a quick example of using Bootstrap's card component.</p>
+                <a href="#" class="btn btn-primary" th:href="@{/some-page}">Go somewhere</a>
+            </div>
+        </div>
+
+        <!-- Example of a Bootstrap button -->
+        <button type="button" class="btn btn-success">Example Button</button>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>
