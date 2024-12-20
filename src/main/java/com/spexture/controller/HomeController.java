@@ -6,21 +6,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class HomeController {
     @GetMapping("/")
     public String home() {
-        return "home";
+        return "home"; // Return the name of the home view (e.g., home.html)
     }
     
-    @GetMapping("/profile")
-    public String profile() {
-        return "profile";
-    }
-
-    @GetMapping("/register")
-    public String register() {
-        return "register";
-    }
-    
-    @GetMapping("/login")
-    public String login() {
-        return "login";
+    @GetMapping("/home")
+    public String homePage() {
+        return "home"; // Return the name of the home view (e.g., home.html)
     }
 }
