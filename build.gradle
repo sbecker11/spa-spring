@@ -1,10 +1,13 @@
+
+
+
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.4.0'
 	id 'io.spring.dependency-management' version '1.1.6'
 }
 
-group = 'com.example'
+group = 'com.spexture'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
 
@@ -19,19 +22,66 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.r2dbc:r2dbc-postgresql' // or the appropriate R2DBC driver for your database
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-    implementation 'org.springframework.boot:spring-boot-starter-data-rest'
-    implementation 'org.springframework.boot:spring-boot-starter-mail'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation ('org.springframework.boot:spring-boot-starter-actuator') {
+        exclude group: "javax.servlet", module: "javax.servlet-api"
+    }
+
+    implementation ('org.apache.hbase:hbase-client:2.4.17') {
+        exclude group: 'ch.qos.reload4j', module: 'reload4j'
+        exclude group: 'org.slf4j', module: 'slf4j-reload4j'
+        exclude group: "javax.servlet", module: "javax.servlet-api"
+    }
+    implementation ('org.apache.hbase:hbase-common:2.4.17') {
+        exclude group: 'ch.qos.reload4j', module: 'reload4j'
+        exclude group: 'org.slf4j', module: 'slf4j-reload4j'
+        exclude group: "javax.servlet", module: "javax.servlet-api"
+    }
+    implementation ('org.apache.hbase:hbase-server:2.4.17') {
+        exclude group: 'ch.qos.reload4j', module: 'reload4j'
+        exclude group: 'org.slf4j', module: 'slf4j-reload4j'
+        exclude group: "javax.servlet", module: "javax.servlet-api"
+    }
+
+    // If not already pulled by HBase, add Hadoop explicitly:
+    implementation ('org.apache.hadoop:hadoop-common:3.3.4') {
+        exclude group: 'ch.qos.reload4j', module: 'reload4j'
+        exclude group: 'org.slf4j', module: 'slf4j-reload4j'
+        exclude group: "javax.servlet", module: "javax.servlet-api"
+    }
+    implementation ('org.apache.hadoop:hadoop-hdfs:3.3.4'){
+        exclude group: 'ch.qos.reload4j', module: 'reload4j'
+        exclude group: 'org.slf4j', module: 'slf4j-reload4j'
+        exclude group: "javax.servlet", module: "javax.servlet-api"
+    }
+
+    // Spring Boot starters for HBase integration and general web application
+    implementation ('org.springframework.boot:spring-boot-starter-web') {
+        exclude group: 'commons-logging', module: 'commons-logging'
+        exclude group: "javax.servlet", module: "javax.servlet-api"
+    }
+    implementation ('org.springframework.boot:spring-boot-starter-security') {
+        exclude group: "javax.servlet", module: "javax.servlet-api"
+    }
+    implementation ('org.springframework.boot:spring-boot-starter-thymeleaf') {
+        exclude group: "javax.servlet", module: "javax.servlet-api"
+    }
+    implementation ('org.springframework.boot:spring-boot-starter-validation') {
+        exclude group: "javax.servlet", module: "javax.servlet-api"
+    } 
+        
+    // If you're not using these, you can remove them, otherwise keep:
+    implementation ('org.springframework.boot:spring-boot-starter-mail') {
+        exclude group: "javax.servlet", module: "javax.servlet-api"
+    }
+
+    // Webjars for frontend resources
     implementation 'org.webjars:bootstrap:5.3.0'
     implementation 'org.webjars:jquery:3.6.0'
-    implementation 'org.apache.solr:solr-solrj:8.11.1' // Add SolrJ dependency
+    
+    // Solr dependency removed as it's not mentioned for this HBase setup
+    // implementation 'org.apache.solr:solr-solrj:8.11.1'
+
+    // Testing
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
@@ -39,3 +89,9 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
+configurations.all {
+    resolutionStrategy {
+        force 'org.slf4j:slf4j-api:2.0.16'
+        force 'ch.qos.logback:logback-classic:1.5.12'
+    }
+}

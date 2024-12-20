@@ -1,4 +1,4 @@
-package com.example.spa_spring;
+package com.spexture.spa_spring;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

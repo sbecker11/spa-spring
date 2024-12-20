@@ -3,43 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Register</title>
+    <title>Profile</title>
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}">
 </head>
 <body>
     <div th:replace="navbar :: navbar"></div>
-    <h1>Register</h1>
-    <form id="registerForm" th:action="@{/register}" method="post">
+    <h1>User Profile</h1>
+    <div th:if="${#authentication.name}" th:text="'Logged in as: ' + ${#authentication.name}"></div>
+    <div th:if="${#authentication.principal.attributes.email}" th:text="'Current Email: ' + ${#authentication.principal.attributes.email}"></div>
+
+    <h2>Edit Profile</h2>
+    <form id="profileForm" th:action="@{/profile/update}" method="post">
         <div>
-            <label for="email">Email:</label>
+            <label for="email">New Email:</label>
             <input type="email" id="email" name="email" required 
                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" 
                    title="Enter a valid email address" />
             <span id="emailError" class="error" style="color: red;"></span>
         </div>
         <div>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required 
+            <label for="password">New Password:</label>
+            <input type="password" id="password" name="password" 
                    minlength="8" 
                    pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" 
                    title="At least 8 characters, one uppercase, one lowercase, one number and one special character" />
             <span id="passwordError" class="error" style="color: red;"></span>
         </div>
         <div>
-            <label for="confirmPassword">Confirm Password:</label>
-            <input type="password" id="confirmPassword" name="confirmPassword" required 
+            <label for="confirmPassword">Confirm New Password:</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" 
                    minlength="8" 
                    pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" />
             <span id="confirmPasswordError" class="error" style="color: red;"></span>
         </div>
-        <button type="submit">Register</button>
+        <button type="submit">Update Profile</button>
     </form>
-    <div th:if="${param.error}" th:text="${error}"></div>
-    
+
     <script th:inline="javascript">
         document.addEventListener('DOMContentLoaded', () => {
-            const registerForm = document.getElementById('registerForm');
+            const profileForm = document.getElementById('profileForm');
 
             // Function to validate email
             const validateEmail = (email) => {
@@ -53,35 +56,39 @@
                 return passwordRegex.test(password);
             };
 
-            // Event listener for register form
-            registerForm.addEventListener('submit', function(event) {
+            // Event listener for profile form
+            profileForm.addEventListener('submit', function(event) {
                 let isValid = true;
                 const email = document.getElementById('email').value;
                 const password = document.getElementById('password').value;
                 const confirmPassword = document.getElementById('confirmPassword').value;
 
-                // Email validation
-                if (!validateEmail(email)) {
-                    document.getElementById('emailError').textContent = 'Please enter a valid email address.';
-                    isValid = false;
-                } else {
-                    document.getElementById('emailError').textContent = '';
+                // Email validation - only if a new email is provided
+                if (email) {
+                    if (!validateEmail(email)) {
+                        document.getElementById('emailError').textContent = 'Please enter a valid email address.';
+                        isValid = false;
+                    } else {
+                        document.getElementById('emailError').textContent = '';
+                    }
                 }
 
-                // Password validation
-                if (!validatePassword(password)) {
-                    document.getElementById('passwordError').textContent = 'Password must be at least 8 characters, including one uppercase, one lowercase, one number, and one special character.';
-                    isValid = false;
-                } else {
-                    document.getElementById('passwordError').textContent = '';
-                }
+                // Password validation - only if a new password is provided
+                if (password) {
+                    if (!validatePassword(password)) {
+                        document.getElementById('passwordError').textContent = 'Password must be at least 8 characters, including one uppercase, one lowercase, one number, and one special character.';
+                        isValid = false;
+                    } else {
+                        document.getElementById('passwordError').textContent = '';
+                    }
 
-                // Confirm Password validation
-                if (password !== confirmPassword) {
-                    document.getElementById('confirmPasswordError').textContent = 'Passwords do not match.';
-                    isValid = false;
-                } else {
-                    document.getElementById('confirmPasswordError').textContent = '';
+                    // Confirm Password validation
+                    if (password !== confirmPassword) {
+                        document.getElementById('confirmPasswordError').textContent = 'Passwords do not match.';
+                        isValid = false;
+                    } else {
+                        document.getElementById('confirmPasswordError').textContent = '';
+                    }
                 }
 
                 if (!isValid) {
@@ -95,7 +102,7 @@
                 const confirmPassword = this.value;
                 const errorElement = document.getElementById('confirmPasswordError');
 
-                if (password !== confirmPassword) {
+                if (password && password !== confirmPassword) {
                     errorElement.textContent = 'Passwords do not match.';
                 } else {
                     errorElement.textContent = '';
