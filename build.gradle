@@ -3,7 +3,7 @@
 
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.4.0'
+	id 'org.springframework.boot' version '3.4.1'
 	id 'io.spring.dependency-management' version '1.1.6'
 }
 
@@ -21,58 +21,39 @@ repositories {
 	mavenCentral()
 }
 
-dependencies {
-    implementation ('org.springframework.boot:spring-boot-starter-actuator') {
-        exclude group: "javax.servlet", module: "javax.servlet-api"
-    }
+configurations.all {
+    exclude group: 'ch.qos.reload4j', module: 'reload4j'
+    exclude group: 'commons-logging', module: 'commons-logging'
+    exclude group: 'org.slf4j', module: 'slf4j-reload4j'
+    exclude group: 'javax.servlet', module: 'javax.servlet-api'
+}
 
-    implementation ('org.apache.hbase:hbase-client:2.4.17') {
-        exclude group: 'ch.qos.reload4j', module: 'reload4j'
-        exclude group: 'org.slf4j', module: 'slf4j-reload4j'
-        exclude group: "javax.servlet", module: "javax.servlet-api"
+configurations.all {
+    resolutionStrategy {
+        force 'org.slf4j:slf4j-api:2.0.16'
+        force 'ch.qos.logback:logback-classic:1.5.12'
     }
-    implementation ('org.apache.hbase:hbase-common:2.4.17') {
-        exclude group: 'ch.qos.reload4j', module: 'reload4j'
-        exclude group: 'org.slf4j', module: 'slf4j-reload4j'
-        exclude group: "javax.servlet", module: "javax.servlet-api"
-    }
-    implementation ('org.apache.hbase:hbase-server:2.4.17') {
-        exclude group: 'ch.qos.reload4j', module: 'reload4j'
-        exclude group: 'org.slf4j', module: 'slf4j-reload4j'
-        exclude group: "javax.servlet", module: "javax.servlet-api"
-    }
+}
+
+dependencies {
+    implementation ('org.springframework.boot:spring-boot-starter-logging')
+    implementation ('org.springframework.boot:spring-boot-starter-actuator')
+    implementation ('org.apache.hbase:hbase-client:2.4.17')
+    implementation ('org.apache.hbase:hbase-common:2.4.17')
+    implementation ('org.apache.hbase:hbase-server:2.4.17')
 
     // If not already pulled by HBase, add Hadoop explicitly:
-    implementation ('org.apache.hadoop:hadoop-common:3.3.4') {
-        exclude group: 'ch.qos.reload4j', module: 'reload4j'
-        exclude group: 'org.slf4j', module: 'slf4j-reload4j'
-        exclude group: "javax.servlet", module: "javax.servlet-api"
-    }
-    implementation ('org.apache.hadoop:hadoop-hdfs:3.3.4'){
-        exclude group: 'ch.qos.reload4j', module: 'reload4j'
-        exclude group: 'org.slf4j', module: 'slf4j-reload4j'
-        exclude group: "javax.servlet", module: "javax.servlet-api"
-    }
+    implementation ('org.apache.hadoop:hadoop-common:3.3.4')
+    implementation ('org.apache.hadoop:hadoop-hdfs:3.3.4')
 
     // Spring Boot starters for HBase integration and general web application
-    implementation ('org.springframework.boot:spring-boot-starter-web') {
-        exclude group: 'commons-logging', module: 'commons-logging'
-        exclude group: "javax.servlet", module: "javax.servlet-api"
-    }
-    implementation ('org.springframework.boot:spring-boot-starter-security') {
-        exclude group: "javax.servlet", module: "javax.servlet-api"
-    }
-    implementation ('org.springframework.boot:spring-boot-starter-thymeleaf') {
-        exclude group: "javax.servlet", module: "javax.servlet-api"
-    }
-    implementation ('org.springframework.boot:spring-boot-starter-validation') {
-        exclude group: "javax.servlet", module: "javax.servlet-api"
-    } 
+    implementation ('org.springframework.boot:spring-boot-starter-web')
+    implementation ('org.springframework.boot:spring-boot-starter-security')
+    implementation ('org.springframework.boot:spring-boot-starter-thymeleaf')
+    implementation ('org.springframework.boot:spring-boot-starter-validation')
         
     // If you're not using these, you can remove them, otherwise keep:
-    implementation ('org.springframework.boot:spring-boot-starter-mail') {
-        exclude group: "javax.servlet", module: "javax.servlet-api"
-    }
+    implementation ('org.springframework.boot:spring-boot-starter-mail')
 
     // Webjars for frontend resources
     implementation 'org.webjars:bootstrap:5.3.0'
@@ -89,9 +70,3 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
-configurations.all {
-    resolutionStrategy {
-        force 'org.slf4j:slf4j-api:2.0.16'
-        force 'ch.qos.logback:logback-classic:1.5.12'
-    }
-}

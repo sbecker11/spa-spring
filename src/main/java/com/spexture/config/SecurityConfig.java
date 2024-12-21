@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-import com.spexture.controller.UserController;
 import com.spexture.service.UserService;
 
 
@@ -18,7 +17,7 @@ import com.spexture.service.UserService;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+    private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
 
     @Bean
     public UserService userService() {
@@ -37,25 +36,28 @@ public class SecurityConfig {
         logger.info("Configuring security filter chain");
         http
             .authorizeHttpRequests((requests) -> { 
-                logger.info("Configuring authorization requests");
-                requests
-                    .requestMatchers("/", "/home", "/register", "/login", "/webjars/**", "/css/**").permitAll() // Allow access to home and other public pages
-                .anyRequest().authenticated()
+                requests // these pages require no authentication
+                    .requestMatchers("/","/home","/about", "/register", "/webjars/**", "/css/**").permitAll(); // Allow access to /home without authentication
+                logger.info("handled request NOT requirming authentication");
+                    requests // any other pages require authentication
+                    .anyRequest().authenticated(); 
+                logger.info("handled request requirming authentication");
+
             })
-            .formLogin((form) -> {
-                logger.info("Configuring form login");
-                form
-                    .loginPage("/login")
-                    .defaultSuccessUrl("/home", true) // Redirect to /home after successful login
-                    .permitAll()
-            })
-            .oauth2Login((oauth2) -> {
-                logger.info("Configuring oauth2 login");
-                oauth2.loginPage("/login"))
-            })
+            // .formLogin((form) -> {
+            //     logger.info("Configuring form login");
+            //     form
+            //         .loginPage("/login")
+            //         .defaultSuccessUrl("/home", true) // Redirect to /home after successful login
+            //         .permitAll();
+            // })
+            // .oauth2Login((oauth2) -> {
+            //     logger.info("Configuring oauth2 login");
+            //     oauth2.loginPage("/login");
+            // })
             .logout((logout) -> {
                 logger.info("Configuring logout");
-                logout.permitAll());
+                logout.permitAll();
             });
         logger.info("Security configuration applied successfully");
         return http.build();
